@@ -1,0 +1,1 @@
+Please run the 'main.m' file to embed the data into a cover image.
