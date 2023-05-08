@@ -1,0 +1,49 @@
+clear all;
+clc;
+
+load M1_v1
+load T2_1
+load T2_2
+load T2_4
+load Sa_PEE_4000
+
+
+imgfile = ['E:\MATLAB\My_Histogram\ou2D\'];
+imgdir = dir([imgfile,'\*.bmp']);
+
+figure;
+
+a = sum(M1_v1(13,:)>0);
+plot(M1_v1(13,7:a), M1_v1(13+1,7:a), '-kd', 'LineWidth', 2, 'MarkerEdgeColor', 'k', 'MarkerSize', 5);
+hold on;
+
+b = sum(T2_1(11,:) >0 );
+plot(T2_1(11,1:b), T2_1(12,1:b), ':r+', 'LineWidth', 2, 'MarkerEdgeColor', 'r', 'MarkerSize', 5);
+hold on;
+
+c = sum(T2_2(nImg,:) >0 );
+plot(T2_2(11,:), T2_2(12,:), ':g>', 'LineWidth', 2, 'MarkerEdgeColor', 'g', 'MarkerSize', 5);
+
+% d = sum(T2_3_9(nImg,:)<=M1_v1(nImg,a) & T2_3_9(nImg,:) >0 );
+% plot(T2_3_9(nImg,1:d), T2_3_9(nImg+1,1:d), ':bs', 'LineWidth', 2, 'MarkerEdgeColor', 'b', 'MarkerSize',5);
+
+e = sum(T2_4_9(nImg,:) >0 );
+plot(T2_4(11,:), T2_4(12,:), ':m*', 'LineWidth', 2, 'MarkerEdgeColor', 'm', 'MarkerSize',5);
+
+f = sum(Sa_PEE_4000(nImg,:) >0 );
+plot(Sa_PEE_4000(13,:), Sa_PEE_4000(14,:), ':k+', 'LineWidth', 2, 'MarkerEdgeColor', 'k', 'MarkerSize', 5);
+
+% f = sum(Li_PEE_4000(nImg,:)<=M1_v1(nImg,a) & Li_PEE_4000(nImg,:) >0 );
+% plot(Li_PEE_4000(nImg,1:f), Li_PEE_4000(nImg+1,1:f), ':k+', 'LineWidth', 2, 'MarkerEdgeColor', 'k', 'MarkerSize',5);
+% 
+% g = sum(Hong2012(nImg,:)<=M1_v1(nImg,a) & Hong2012(nImg,:) >0 );
+% plot(Hong2012(nImg,1:g), Hong2012(nImg+1,1:g), ':b>', 'LineWidth', 2, 'MarkerEdgeColor', 'b', 'MarkerSize',5);
+
+
+% filename =sprintf('%s',strtok(imgdir(i).name,'.')); 
+
+legend('Proposed', 'Manner 1', 'Manner 2','Manner 4','Sachnev et al.');
+title(Lena);
+xlabel('Embedding Capacity (bits)');
+ylabel('PSNR(dB)');
+grid on
