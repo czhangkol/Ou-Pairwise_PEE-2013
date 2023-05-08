@@ -1,0 +1,1 @@
+Please run the 'decode.m' file to extract the data and recover the original image.

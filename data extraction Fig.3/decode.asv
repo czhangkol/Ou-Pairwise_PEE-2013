@@ -1,0 +1,93 @@
+clear all
+clc
+
+load message_Air
+I = double(imread('marked_Airplane.bmp'));
+Io = double(imread('Airplane.bmp'));
+
+[d1 d2] = size(I);
+
+[pFor, circleX, circleY, circleIPos, circleJPos, T2, circleNL,Capacity, LM_len,str2_len] = circlePara(I);
+half_circle = Capacity;
+[Iw,  nBit, MSE,str2,str3] =  single2Extract(I, half_circle, pFor, circleX, circleY, circleIPos, circleJPos,T2,circleNL,str2_len);
+
+str2_circle = str2;
+str3_circle = str3;
+
+[Iw] = LSB_recover_circle(Iw,str2_circle);
+
+%Combine binary and ternary bits into the payload
+str2_circle = str2(66+LM_len+1:length(str2));
+str3_circle = num2str(str3_circle, '%0.0f');
+str_2 = [];
+for i = 1:floor(length(str3_circle)/33)
+    a = (i-1)*33 + 1;
+    b = i*33;
+    str_1 = base2dec(str3_circle(a:b),3);
+    str_1 = dec2bin(str_1,51);
+    str_1(1) = [];
+    str_2 = [str_2 str_1];
+end
+a = floor(length(str3_circle)/33)*33 + 1;
+b = length(str3_circle);
+if a < b
+str_1 = base2dec(str3_circle(a:b),3);
+str_1 = dec2bin(str_1);
+str_1(1) = [];
+str_2 = [str_2 str_1];
+end
+
+str2_num = size(1,length(str_2));
+for i=1:length(str_2)
+    str2_num(i) = str2double(str_2(i));
+end
+
+%the extracted  message for the circle layer
+mes_circle = [str2_num str2_circle];
+    
+[pFor, crossX, crossY, crossIPos, crossJPos, T1, crossNL,Capacity, LM_len,str2_len] = crossPara(Iw);
+half_cross = Capacity;
+[Iw, nBit, MSE, str2,str3] = singleLayerExtract(Iw, half_cross, pFor, crossX, crossY, crossIPos, crossJPos,T1,crossNL,str2_len);
+
+str2_cross = str2;
+str3_cross = str3;
+
+[Iw] = LSB_recover_cross(Iw,str2_cross);
+
+%Combine binary and ternary bits into the payload
+str2_cross = str2(66+LM_len+1:length(str2));
+str3_cross = num2str(str3_cross, '%0.0f');
+str_2 = [];
+for i = 1:floor(length(str3_cross)/33)
+    a = (i-1)*33 + 1;
+    b = i*33;
+    str_1 = base2dec(str3_cross(a:b),3);
+    str_1 = dec2bin(str_1,51);
+    str_1(1) = [];
+    str_2 = [str_2 str_1];
+end
+
+a = floor(length(str3_cross)/33)*33 + 1;
+b = length(str3_cross);
+if a < b
+str_1 = base2dec(str3_cross(a:b),3);
+str_1 = dec2bin(str_1);
+str_1(1) = [];
+str_2 = [str_2 str_1];
+end
+
+str2_num = size(1,length(str_2));
+for i=1:length(str_2)
+    str2_num(i) = str2double(str_2(i));
+end
+
+%the extracted  message for the cross layer
+mes_cross = [str2_num str2_cross];
+
+final_message = [mes_cross mes_circle];
+
+
+
+sum(sum((final_message-message).^2))
+sum(sum((Iw-Io).^2))
+
